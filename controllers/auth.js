@@ -19,7 +19,10 @@ exports.postSignUp = (req, res, next) => {
                         const user = new User({
                             name: req.body.name,
                             email: req.body.email,
-                            password: hash
+                            password: hash,
+                            cart: {
+                                items: []
+                            }
                         });
                         user.save()
                             .then(user => {
@@ -52,30 +55,30 @@ exports.postLogin = (req, res, next) => {
                     message: 'user doesn\'t exists'
                 });
             }
-                bcrypt.compare(req.body.password, user.password, (err, result) => {
-                    if (err) {
-                        return res.json({
-                            message: 'Auth failed'
-                        });
-                    }
-                    if (result) {
-                        const token = jwt.sign({
-                                email: user.email,
-                                userId: user._id
-                            },
-                            process.env.JWT_KEY,
-                            {
-                                expiresIn: "1h"
-                            });
-                        return res.json({
-                            message: 'Auth successful',
-                            token: token
-                        });
-                    }
+            bcrypt.compare(req.body.password, user.password, (err, result) => {
+                if (err) {
                     return res.json({
-                        message: 'Auth failed, Incorrect password'
+                        message: 'Auth failed'
                     });
+                }
+                if (result) {
+                    const token = jwt.sign({
+                            email: user.email,
+                            userId: user._id
+                        },
+                        process.env.JWT_KEY,
+                        {
+                            expiresIn: "1h"
+                        });
+                    return res.json({
+                        message: 'Auth successful',
+                        token: token
+                    });
+                }
+                return res.json({
+                    message: 'Auth failed, Incorrect password'
                 });
+            });
         })
         .catch(err => {
             console.log(err);

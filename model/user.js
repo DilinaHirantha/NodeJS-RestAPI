@@ -34,6 +34,8 @@ const userSchema = new Schema({
 });
 
 userSchema.methods.addToCart = function (product) {
+    // ()=>{} function eken context eka clear karanawa. ethakota 'this' kiyana eka empty wenawa
+    // function() eken context eka pass karanawa. clear karanne nathuwa
     const cartProductIndex = this.cart.items.findIndex(cp => {
         return cp.productId.toString() === product._id.toString();
     });
@@ -57,6 +59,7 @@ userSchema.methods.addToCart = function (product) {
     return this.save();
 };
 
+
 userSchema.methods.removeFromCart = function (productId) {
     const updatedCartItems = this.cart.items.filter(items => {
         return items.productId.toString() !== productId.toString();
@@ -66,8 +69,8 @@ userSchema.methods.removeFromCart = function (productId) {
     return this.save();
 }
 
-userSchema.methods.clearCart = function (){
-    this.cart = { item:[]} //IN THIS SCHEMA, WE CAN USE THIS KEYWORD TO REPRESENT
+userSchema.methods.clearCart = function () {
+    this.cart = {item: []} //IN THIS SCHEMA, WE CAN USE THIS KEYWORD TO REPRESENT
     return this.save();
 }
 

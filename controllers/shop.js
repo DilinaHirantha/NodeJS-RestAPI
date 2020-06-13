@@ -1,5 +1,7 @@
 const Product = require('../model/product');
 const Order = require('../model/order');
+const User = require('../model/user');
+
 
 exports.getAllproducts = (req, res, next) => {
     Product.find()
@@ -25,7 +27,6 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.postCart = (req, res, next) => {
-    console.log("ADD TO CART");
     const prodId = req.body.productId;
     Product.findById(prodId)
         .then(product => {
@@ -50,7 +51,7 @@ exports.getCart = (req, res, next) => {
 
 exports.postCartDeleteProduct = (req, res, next) => {
     const proId = req.body.productId;
-    req.user.removeFromCart(proId)
+    req.userData.removeFromCart(proId)
         .then(result => {
             console.log("ITEMS REMOVED FROM THE CART");
         })
@@ -78,10 +79,20 @@ exports.postOrders = (req, res, next) => {
         });
 }
 
+exports.getOrders = (req, res, next) => {
+    console.log(req.user._id);
+    Order.find({'user.userId': req.user._id})
+        .then(orders => {
+            res.json({
+                orders:orders
+            });
+        }).catch(err => {
+        console.log(err);
+    });
+}
+
 // exports.getCheckouts = (req, res, next) => {
 //     console.log("this is the checkout");
 // }
 
-// exports.getOrders = (req, res, next) => {
-//     console.log("this are the orders");
-// }
+

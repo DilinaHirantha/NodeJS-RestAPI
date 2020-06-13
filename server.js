@@ -12,18 +12,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 const User = require('./model/user');
 
-// app.use((req, res, next) => {
-//     User.findById("5ecbd981c62b51148cd6e052")
-//         .then(user => {
-//             req.user = user;
-//             next();
-//         }).catch(err => {
-//         console.log(err);
-//     })
-// });
-
-
-
 app.use('/admin', AdminRoutes);
 app.use('/shop',ShopRoutes);
 app.use(AuthRoutes);
